@@ -81,6 +81,8 @@ let STATE = {
   answered:     false,      // word is answered / skipped, awaiting "Next"
   paused:       false,
   highScore:    0,
+  hintsUsed: 0,
+  hintsMax: 3,
 };
 
 /* ─── LIFECYCLE HELPERS ──────────────────────── */
@@ -359,7 +361,13 @@ async function startGame() {
     hintUsed:     false,
     answered:     false,
     paused:       false,
+    hintsUsed:    0
   });
+
+  const hintsLeft = document.getElementById('hints-left');
+  if (hintsLeft) hintsLeft.textContent = STATE.hintsMax;
+  const hintBtn = document.getElementById('hint-btn');
+  if (hintBtn) hintBtn.disabled = false;
 
   // Show loading screen
   showScreen('loading');
@@ -550,7 +558,9 @@ function handleWrongAnswer() {
 /** Show English meaning as a hint (deducts points) */
 function useHint() {
   if (STATE.hintUsed || STATE.answered || STATE.paused) return;
+  if (STATE.hintsUsed >= STATE.hintsMax) return;
   STATE.hintUsed = true;
+  STATE.hintsUsed++;
 
   // Deduct points
   const deduct = POINTS[STATE.level].hint;
@@ -571,6 +581,14 @@ function useHint() {
 
   // Score popup
   showScorePopup(deduct, window.innerWidth / 2, window.innerHeight / 2);
+
+  const hintsLeft = document.getElementById('hints-left');
+  if (hintsLeft) hintsLeft.textContent = STATE.hintsMax - STATE.hintsUsed;
+
+  if (STATE.hintsUsed >= STATE.hintsMax) {
+    const hintBtn = document.getElementById('hint-btn');
+    if (hintBtn) hintBtn.disabled = true;
+  }
 }
 
 /* ─── SKIP ────────────────────────────────────── */
