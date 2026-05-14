@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🌿 Jungle Word Puzzle</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Google Fonts: Baloo 2 for display, Noto Sans Devanagari for Marathi -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════ -->
+  <!--  ANIMATED JUNGLE BACKGROUND LAYER     -->
+  <!-- ══════════════════════════════════════ -->
+  <div id="jungle-bg" aria-hidden="true">
+    <div class="sky-gradient"></div>
+    <div class="mist-layer mist1"></div>
+    <div class="mist-layer mist2"></div>
+
+    <!-- SVG tree silhouettes -->
+    <svg class="tree-layer back-trees" viewBox="0 0 1440 320" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,280 L60,180 L120,280 Z" fill="#0a2e10"/>
+      <path d="M80,290 L160,140 L240,290 Z" fill="#082808"/>
+      <path d="M200,285 L270,160 L340,285 Z" fill="#0d3a12"/>
+      <path d="M320,288 L400,150 L480,288 Z" fill="#082810"/>
+      <path d="M450,280 L530,130 L610,280 Z" fill="#0a2e10"/>
+      <path d="M590,290 L680,145 L770,290 Z" fill="#0d3a12"/>
+      <path d="M730,285 L810,155 L890,285 Z" fill="#082810"/>
+      <path d="M870,280 L960,130 L1050,280 Z" fill="#0a2e10"/>
+      <path d="M1020,288 L1110,148 L1200,288 Z" fill="#0d3a12"/>
+      <path d="M1160,285 L1250,145 L1340,285 Z" fill="#082810"/>
+      <path d="M1290,290 L1380,140 L1440,230 L1440,290 Z" fill="#082808"/>
+    </svg>
+
+    <svg class="tree-layer front-trees" viewBox="0 0 1440 300" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M-20,300 L80,100 L180,300 Z" fill="#061e08"/>
+      <path d="M140,300 L260,80 L380,300 Z" fill="#051a07"/>
+      <path d="M340,300 L440,110 L540,300 Z" fill="#061e08"/>
+      <path d="M500,300 L620,70 L740,300 Z" fill="#051a07"/>
+      <path d="M680,300 L790,95 L900,300 Z" fill="#061e08"/>
+      <path d="M860,300 L980,75 L1100,300 Z" fill="#051a07"/>
+      <path d="M1060,300 L1170,100 L1280,300 Z" fill="#061e08"/>
+      <path d="M1240,300 L1360,85 L1460,300 Z" fill="#051a07"/>
+    </svg>
+
+    <!-- Animated vines -->
+    <div class="vine vine1"></div>
+    <div class="vine vine2"></div>
+    <div class="vine vine3"></div>
+    <div class="vine vine4"></div>
+
+    <!-- Floating leaves container (populated by JS) -->
+    <div id="leaves-container"></div>
+
+    <!-- Glowing fireflies (populated by JS) -->
+    <div id="fireflies-container"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════ -->
+  <!--  SCREEN: START                        -->
+  <!-- ══════════════════════════════════════ -->
+  <div id="screen-start" class="screen active">
+    <div class="start-card">
+      <div class="game-logo">
+        <div class="logo-leaves" aria-hidden="true">🍃🌿🍃</div>
+        <h1 class="game-title">Jungle Word<br/>Puzzle</h1>
+        <div class="logo-cat" id="start-cat">🐱</div>
+      </div>
+
+      <p class="game-tagline">Unscramble words · Learn meanings · Explore the jungle!</p>
+
+      <!-- Level selector -->
+      <div class="level-selector">
+        <div class="level-label">Choose Level:</div>
+        <div class="level-tabs" role="group" aria-label="Difficulty level">
+          <button class="level-tab active" data-level="easy" onclick="selectLevel('easy')">🌱 Easy</button>
+          <button class="level-tab" data-level="medium" onclick="selectLevel('medium')">🌿 Medium</button>
+          <button class="level-tab" data-level="hard" onclick="selectLevel('hard')">🔥 Hard</button>
+        </div>
+      </div>
+
+      <!-- High score display -->
+      <div class="hs-display" id="hs-display" style="display:none">
+        <span class="hs-icon">🏆</span>
+        <span id="hs-value">0</span>
+        <span class="hs-label">Best Score</span>
+      </div>
+
+      <!-- THE PLAY BUTTON -->
+      <button class="play-btn" id="play-btn" onclick="startGame()">
+        <span class="play-btn-bg"></span>
+        <span class="play-btn-glow"></span>
+        <span class="play-btn-content">
+          <span class="play-icon">▶</span>
+          <span class="play-text">Play Now!</span>
+        </span>
+        <span class="play-btn-leaves" aria-hidden="true">🍃</span>
+      </button>
+
+      <div class="how-to-play">
+        <div class="how-row">⌨️ Type the unscrambled word &amp; press Enter</div>
+        <div class="how-row">💡 Use Hint for English meaning (−5 pts)</div>
+        <div class="how-row">⏭️ Skip a word to reveal &amp; move on</div>
+        <div class="how-row">🔥 Build streaks for bonus points!</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════ -->
+  <!--  SCREEN: LOADING                      -->
+  <!-- ══════════════════════════════════════ -->
+  <div id="screen-loading" class="screen">
+    <div class="loading-card">
+      <div class="loading-cat" id="loading-cat">🐱</div>
+      <div class="loading-title">Loading Words…</div>
+      <div class="loading-sub">AI is crafting fresh jungle words with Marathi meanings!</div>
+      <div class="loading-dots">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════ -->
+  <!--  SCREEN: GAME                         -->
+  <!-- ══════════════════════════════════════ -->
+  <div id="screen-game" class="screen">
+    <div class="game-wrapper">
+
+      <!-- TOP BAR -->
+      <div class="top-bar">
+        <div class="stat-pill score-pill">
+          <span class="stat-icon">⭐</span>
+          <span class="stat-val" id="score-display">0</span>
+        </div>
+        <div class="level-pill" id="level-pill">Easy</div>
+        <div class="stat-pill lives-pill">
+          <span id="lives-display">❤️❤️❤️</span>
+        </div>
+        <button class="icon-btn pause-btn" id="pause-btn" onclick="togglePause()" title="Pause" aria-label="Pause game">⏸</button>
+      </div>
+
+      <!-- WORD PROGRESS -->
+      <div class="word-progress">
+        <div class="progress-track">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <span class="progress-label" id="progress-label">1 / 8</span>
+      </div>
+
+      <!-- CAT CHARACTER -->
+      <div class="cat-stage">
+        <div class="cat-shadow"></div>
+        <div class="cat-char" id="game-cat" aria-label="Cat explorer character">🐱</div>
+        <div class="streak-badge" id="streak-badge" style="display:none">🔥 <span id="streak-count">0</span></div>
+      </div>
+
+      <!-- GAME CARD -->
+      <div class="game-card" id="game-card">
+
+        <!-- Word scramble display -->
+        <div class="scramble-label">Unscramble this word:</div>
+        <div class="scramble-word" id="scramble-word">ELPPA</div>
+
+        <!-- Hint text (shown after hint button clicked) -->
+        <div class="hint-text" id="hint-text" style="display:none">
+          <span class="hint-icon">💡</span>
+          <span id="hint-content"></span>
+        </div>
+
+        <!-- Meaning box (shown after correct/skip) -->
+        <div class="meaning-box" id="meaning-box" style="display:none">
+          <div class="meaning-row">
+            <span class="meaning-flag">🇬🇧</span>
+            <div class="meaning-content">
+              <span class="meaning-lang-label">English</span>
+              <span class="meaning-text" id="meaning-en"></span>
+            </div>
+          </div>
+          <div class="meaning-divider"></div>
+          <div class="meaning-row">
+            <span class="meaning-flag">🇮🇳</span>
+            <div class="meaning-content">
+              <span class="meaning-lang-label">मराठी</span>
+              <span class="meaning-text marathi-text" id="meaning-mr"></span>
+            </div>
+          </div>
+          <div class="points-flash" id="points-flash" style="display:none"></div>
+        </div>
+
+        <!-- Input field -->
+        <div class="input-wrap" id="input-wrap">
+          <input
+            type="text"
+            id="word-input"
+            class="word-input"
+            placeholder="Type your answer here…"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="characters"
+            spellcheck="false"
+            oninput="handleInput(this)"
+            onkeydown="handleKey(event)"
+            aria-label="Your answer"
+          />
+          <div class="input-feedback" id="input-feedback"></div>
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <div class="action-buttons" id="action-buttons">
+          <button class="action-btn submit-btn" id="submit-btn" onclick="submitAnswer()">
+            ✓ Submit
+          </button>
+          <button class="action-btn hint-btn" id="hint-btn" onclick="useHint()">
+            💡 Hint
+          </button>
+          <button class="action-btn skip-btn" id="skip-btn" onclick="skipWord()">
+            ⏭ Skip
+          </button>
+        </div>
+
+        <!-- Next word button (shown after answer) -->
+        <button class="next-btn" id="next-btn" onclick="loadNextWord()" style="display:none">
+          Next Word →
+        </button>
+
+      </div><!-- /game-card -->
+    </div><!-- /game-wrapper -->
+  </div>
+
+  <!-- ══════════════════════════════════════ -->
+  <!--  OVERLAY: PAUSE                       -->
+  <!-- ══════════════════════════════════════ -->
+  <div id="overlay-pause" class="overlay" style="display:none">
+    <div class="overlay-card">
+      <div class="overlay-icon">⏸️</div>
+      <h2 class="overlay-title">Paused</h2>
+      <p class="overlay-sub">Take a breather, explorer!</p>
+      <div class="overlay-score">Score: <strong id="pause-score">0</strong></div>
+      <button class="overlay-btn primary" onclick="resumeGame()">▶ Resume</button>
+      <button class="overlay-btn secondary" onclick="restartGame()">↺ Restart</button>
+      <button class="overlay-btn danger" onclick="goToStart()">🏠 Main Menu</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════ -->
+  <!--  SCREEN: GAME OVER                    -->
+  <!-- ══════════════════════════════════════ -->
+  <div id="screen-gameover" class="screen">
+    <div class="gameover-card">
+      <div class="gameover-cat" id="gameover-cat">🏆</div>
+      <h2 class="gameover-title" id="gameover-title">Adventure Complete!</h2>
+      <div class="final-score" id="final-score">0</div>
+      <div class="final-hs" id="final-hs"></div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-card-val" id="stat-correct">0</div>
+          <div class="stat-card-label">✅ Correct</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-val" id="stat-wrong">0</div>
+          <div class="stat-card-label">❌ Wrong</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-val" id="stat-streak">0</div>
+          <div class="stat-card-label">🔥 Best Streak</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-val" id="stat-accuracy">0%</div>
+          <div class="stat-card-label">🎯 Accuracy</div>
+        </div>
+      </div>
+      <button class="play-btn small" onclick="startGame()">
+        <span class="play-btn-bg"></span>
+        <span class="play-btn-content">
+          <span class="play-icon">↺</span>
+          <span class="play-text">Play Again</span>
+        </span>
+      </button>
+      <button class="ghost-btn" onclick="goToStart()">🏠 Main Menu</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
