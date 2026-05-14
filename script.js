@@ -331,6 +331,13 @@ function shuffleArray(arr) {
   return arr;
 }
 
+/* ─── RESCRAMBLE ────────────────────────────────── */
+function rescramble() {
+  if (STATE.answered || STATE.paused) return;
+  STATE.scrambled = scrambleWord(STATE.currentWord.word);
+  setScrambleDisplay(STATE.scrambled);
+}
+
 /* ══════════════════════════════════════════════
    GAME FLOW
    ══════════════════════════════════════════════ */
