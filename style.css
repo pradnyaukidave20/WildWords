@@ -688,12 +688,19 @@ button:focus-visible {
   padding: 10px;
   transition: all var(--t-normal);
   word-break: break-all;
+  user-select: none;
 }
 .scramble-word.solved {
   color: var(--green-light);
   background: rgba(0,80,25,0.4);
   border-color: rgba(78,255,136,0.5);
   text-shadow: 0 0 20px rgba(78,255,136,0.5);
+}
+
+.scramble-word:hover:not(.solved) {
+  border-color: rgba(78, 255, 136, 0.5);
+  transform: scale(1.02);
+  transition: all 0.2s ease;
 }
 
 /* Hint text */
