@@ -1072,6 +1072,10 @@ button:focus-visible {
   font-weight: 600;
 }
 
+.stat-card:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+
 .ghost-btn {
   background: transparent;
   border: 1px solid rgba(50,200,80,0.3);
