@@ -692,6 +692,7 @@ function endGame(completed) {
   setText('stat-wrong',    STATE.totalWrong);
   setText('stat-streak',   STATE.maxStreak);
   setText('stat-accuracy', acc + '%');
+  setText('stat-hints', STATE.hintsUsed);
 
   const titleEl  = document.getElementById('gameover-title');
   const catEl    = document.getElementById('gameover-cat');
